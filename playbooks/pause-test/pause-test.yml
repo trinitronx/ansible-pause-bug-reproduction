@@ -1,0 +1,27 @@
+---
+# Bug reproduction to test Ctrl-c behavior on pause module
+- name: Test pause module
+  hosts: "localhost"
+  become: no
+  gather_facts: no
+  tasks:
+    - pause:
+      prompt: "Uh-oh! Something doesn't look right... Press Ctlr-c to try and abort and hope for the best?"
+      tags:
+        - test_pause
+
+    - debug: msg="I'm sorry Dave, I can't do that"
+      tags:
+        - test_pause
+        - debug
+
+    - name: We should never get here if you pressed Ctrl-c and aborted...
+      debug: msg="Ooops, we didn't abort... now the playbook has done bad things even though you tried to stop it!"
+      tags:
+        - test_pause
+        - debug
+
+    - name: We should never get here if you pressed Ctrl-c and aborted...
+      fail:
+      tags:
+        - test_pause
